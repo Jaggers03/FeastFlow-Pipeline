@@ -9,7 +9,7 @@ services:
     container_name: feastflow-backend-staging
     environment:
       NODE_ENV: staging
-      PORT: 3002
+      PORT: 3001
     ports:
       - "3002:3001"
     networks: [feastflow-staging]
