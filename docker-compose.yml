@@ -1,0 +1,67 @@
+version: '3.9'
+
+# ── FeastFlow — Production Compose ───────────────────────────
+# Used by Jenkins in the "Deploy to Production" stage
+# Start: IMAGE_TAG=<build-tag> docker-compose up -d
+
+services:
+
+  feastflow-backend:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/feastflow-backend:${IMAGE_TAG:-latest}
+    container_name: feastflow-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      FRONTEND_URL: http://localhost:8080
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - feastflow-net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  feastflow-frontend:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/feastflow-frontend:${IMAGE_TAG:-latest}
+    container_name: feastflow-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      feastflow-backend:
+        condition: service_healthy
+    networks:
+      - feastflow-net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Local Docker registry (acts as JFrog Artifactory substitute)
+  registry:
+    image: registry:2
+    container_name: feastflow-registry
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry-data:/var/lib/registry
+    networks:
+      - feastflow-net
+
+networks:
+  feastflow-net:
+    driver: bridge
+
+volumes:
+  registry-data:

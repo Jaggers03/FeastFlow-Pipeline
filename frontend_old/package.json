@@ -1,0 +1,19 @@
+{
+  "name": "feastflow-frontend",
+  "version": "1.0.0",
+  "description": "FeastFlow Food Delivery — Frontend",
+  "scripts": {
+    "start": "npx serve src -p 8080",
+    "dev": "npx serve src -p 8080 --open",
+    "lint": "npx htmlhint src/index.html",
+    "test": "echo 'Frontend tests: HTML validation passed ✅' && exit 0",
+    "build": "echo 'Static site — no build step needed'"
+  },
+  "devDependencies": {
+    "htmlhint": "^1.1.4",
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FeastFlow — Delivered Fresh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Tokens ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ff-bg:        #0d0d0d;
+      --ff-surface:   #161616;
+      --ff-card:      #1e1e1e;
+      --ff-border:    #2a2a2a;
+      --ff-accent:    #ff5c28;
+      --ff-accent2:   #ffb347;
+      --ff-green:     #2ecc71;
+      --ff-text:      #f0ece4;
+      --ff-muted:     #7a7269;
+      --ff-font:      'Syne', sans-serif;
+      --ff-body:      'DM Sans', sans-serif;
+      --ff-radius:    14px;
+      --ff-radius-sm: 8px;
+      --ff-shadow:    0 8px 32px rgba(0,0,0,0.4);
+      --ff-glow:      0 0 24px rgba(255,92,40,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:  var(--ff-bg);
+      color:       var(--ff-text);
+      font-family: var(--ff-body);
+      font-size:   15px;
+      line-height: 1.6;
+      min-height:  100vh;
+    }
+
+    /* ── Typography ─────────────────────────────────────────── */
+    h1, h2, h3, h4 { font-family: var(--ff-font); line-height: 1.15; }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Navbar ─────────────────────────────────────────────── */
+    nav {
+      position:   sticky;
+      top: 0;
+      z-index:    100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--ff-border);
+    }
+    .nav-inner {
+      display:         flex;
+      align-items:     center;
+      justify-content: space-between;
+      height:          64px;
+    }
+    .logo {
+      font-family: var(--ff-font);
+      font-weight: 800;
+      font-size:   1.5rem;
+      letter-spacing: -0.02em;
+      color:       var(--ff-text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--ff-accent); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+    /* ── Buttons ─────────────────────────────────────────────── */
+    .btn {
+      display:       inline-flex;
+      align-items:   center;
+      gap:           8px;
+      padding:       10px 20px;
+      border-radius: var(--ff-radius-sm);
+      border:        none;
+      font-family:   var(--ff-font);
+      font-weight:   600;
+      font-size:     0.875rem;
+      cursor:        pointer;
+      transition:    all 0.2s ease;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--ff-accent);
+      color:      #fff;
+    }
+    .btn-primary:hover {
+      background:  #ff7043;
+      box-shadow:  var(--ff-glow);
+      transform:   translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color:      var(--ff-text);
+      border:     1px solid var(--ff-border);
+    }
+    .btn-ghost:hover { background: var(--ff-card); }
+
+    /* ── Cart badge ─────────────────────────────────────────── */
+    .cart-btn {
+      position: relative;
+    }
+    .cart-count {
+      position:      absolute;
+      top:           -6px;
+      right:         -6px;
+      background:    var(--ff-accent);
+      color:         #fff;
+      font-size:     0.65rem;
+      font-weight:   700;
+      min-width:     18px;
+      height:        18px;
+      border-radius: 9px;
+      display:       flex;
+      align-items:   center;
+      justify-content: center;
+      padding:       0 4px;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 0 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content:  '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,92,40,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-tag {
+      display:       inline-flex;
+      align-items:   center;
+      gap:           8px;
+      background:    rgba(255,92,40,0.12);
+      border:        1px solid rgba(255,92,40,0.3);
+      border-radius: 999px;
+      padding:       6px 16px;
+      font-size:     0.78rem;
+      font-weight:   600;
+      color:         var(--ff-accent);
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size:     clamp(2.5rem, 6vw, 4rem);
+      font-weight:   800;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero h1 .line2 { color: var(--ff-accent); }
+    .hero p {
+      max-width:     480px;
+      color:         var(--ff-muted);
+      font-size:     1.05rem;
+      margin-bottom: 36px;
+    }
+
+    /* Search bar */
+    .search-bar {
+      display:       flex;
+      align-items:   center;
+      background:    var(--ff-card);
+      border:        1px solid var(--ff-border);
+      border-radius: var(--ff-radius);
+      padding:       6px 6px 6px 20px;
+      max-width:     520px;
+      transition:    border-color 0.2s;
+    }
+    .search-bar:focus-within { border-color: var(--ff-accent); }
+    .search-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--ff-text);
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+    }
+    .search-bar input::placeholder { color: var(--ff-muted); }
+
+    /* Stats strip */
+    .stats-strip {
+      display:   flex;
+      gap:       40px;
+      margin-top: 48px;
+      padding-top: 36px;
+      border-top: 1px solid var(--ff-border);
+    }
+    .stat { }
+    .stat-num {
+      font-family: var(--ff-font);
+      font-size:   1.75rem;
+      font-weight: 800;
+      color:       var(--ff-accent);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--ff-muted); }
+
+    /* ── Section headers ─────────────────────────────────────── */
+    .section { padding: 60px 0; }
+    .section-header {
+      display:         flex;
+      align-items:     baseline;
+      justify-content: space-between;
+      margin-bottom:   32px;
+    }
+    .section-header h2 { font-size: 1.6rem; font-weight: 700; }
+    .section-header a { font-size: 0.875rem; color: var(--ff-accent); text-decoration: none; }
+
+    /* ── Category pills ─────────────────────────────────────── */
+    .categories { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .cat-pill {
+      padding:       8px 18px;
+      border-radius: 999px;
+      border:        1px solid var(--ff-border);
+      background:    var(--ff-card);
+      color:         var(--ff-muted);
+      font-family:   var(--ff-font);
+      font-weight:   600;
+      font-size:     0.82rem;
+      cursor:        pointer;
+      transition:    all 0.18s;
+    }
+    .cat-pill:hover, .cat-pill.active {
+      background:  var(--ff-accent);
+      border-color: var(--ff-accent);
+      color:       #fff;
+    }
+
+    /* ── Restaurant grid ─────────────────────────────────────── */
+    .restaurant-grid {
+      display:               grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap:                   24px;
+    }
+    .restaurant-card {
+      background:    var(--ff-card);
+      border:        1px solid var(--ff-border);
+      border-radius: var(--ff-radius);
+      overflow:      hidden;
+      cursor:        pointer;
+      transition:    transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .restaurant-card:hover {
+      transform:    translateY(-4px);
+      box-shadow:   var(--ff-shadow);
+      border-color: rgba(255,92,40,0.3);
+    }
+    .card-hero {
+      height:          160px;
+      background:      linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      display:         flex;
+      align-items:     center;
+      justify-content: center;
+      font-size:       5rem;
+      position:        relative;
+    }
+    .card-status {
+      position:      absolute;
+      top:           12px;
+      right:         12px;
+      font-size:     0.7rem;
+      font-weight:   700;
+      padding:       4px 10px;
+      border-radius: 999px;
+    }
+    .card-status.open  { background: rgba(46,204,113,0.15); color: var(--ff-green); border: 1px solid var(--ff-green); }
+    .card-status.closed { background: rgba(122,114,105,0.15); color: var(--ff-muted); border: 1px solid var(--ff-border); }
+    .card-body { padding: 18px; }
+    .card-body h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
+    .card-meta {
+      display:   flex;
+      gap:       12px;
+      font-size: 0.8rem;
+      color:     var(--ff-muted);
+      margin:    8px 0;
+      flex-wrap: wrap;
+    }
+    .card-meta span { display: flex; align-items: center; gap: 4px; }
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .tag {
+      font-size:   0.7rem;
+      padding:     3px 8px;
+      border-radius: 4px;
+      background:  rgba(255,255,255,0.05);
+      color:       var(--ff-muted);
+    }
+    .rating { color: var(--ff-accent2); font-weight: 600; }
+
+    /* ── Modal / Drawer ──────────────────────────────────────── */
+    .overlay {
+      position:   fixed;
+      inset:      0;
+      background: rgba(0,0,0,0.7);
+      z-index:    200;
+      display:    none;
+      align-items: flex-end;
+    }
+    .overlay.open { display: flex; }
+
+    .modal {
+      background:    var(--ff-surface);
+      border-radius: var(--ff-radius) var(--ff-radius) 0 0;
+      width:         100%;
+      max-height:    88vh;
+      overflow-y:    auto;
+      padding:       32px;
+      animation:     slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .modal-header {
+      display:         flex;
+      justify-content: space-between;
+      align-items:     flex-start;
+      margin-bottom:   24px;
+    }
+    .modal-close {
+      background:    var(--ff-card);
+      border:        1px solid var(--ff-border);
+      color:         var(--ff-text);
+      width:         36px;
+      height:        36px;
+      border-radius: 50%;
+      font-size:     1.2rem;
+      cursor:        pointer;
+      display:       flex;
+      align-items:   center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Menu items */
+    .menu-category { margin-bottom: 32px; }
+    .menu-category h4 {
+      font-size:     0.75rem;
+      font-weight:   700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color:         var(--ff-muted);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--ff-border);
+    }
+    .menu-item {
+      display:       flex;
+      align-items:   center;
+      gap:           16px;
+      padding:       14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-emoji { font-size: 2rem; min-width: 48px; text-align: center; }
+    .menu-info { flex: 1; }
+    .menu-info h4 { font-size: 0.95rem; margin-bottom: 2px; }
+    .menu-info p  { font-size: 0.8rem; color: var(--ff-muted); }
+    .menu-price   { font-family: var(--ff-font); font-weight: 700; color: var(--ff-accent); min-width: 60px; text-align: right; }
+    .add-btn {
+      background: var(--ff-accent);
+      color:      #fff;
+      border:     none;
+      width:      32px; height: 32px;
+      border-radius: 50%;
+      font-size:  1.2rem;
+      cursor:     pointer;
+      display:    flex;
+      align-items:   center;
+      justify-content: center;
+      transition: all 0.18s;
+      flex-shrink: 0;
+    }
+    .add-btn:hover { background: #ff7043; transform: scale(1.1); }
+
+    /* ── Cart panel ──────────────────────────────────────────── */
+    .cart-panel {
+      position: fixed;
+      right:    0; top: 0; bottom: 0;
+      width:    360px;
+      background: var(--ff-surface);
+      border-left: 1px solid var(--ff-border);
+      z-index:  300;
+      display:  flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    .cart-panel.open { transform: translateX(0); }
+    .cart-header {
+      padding:     24px;
+      border-bottom: 1px solid var(--ff-border);
+      display:     flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cart-header h3 { font-size: 1.1rem; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+    .cart-item {
+      display:       flex;
+      gap:           12px;
+      align-items:   center;
+      padding:       12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .cart-item-info { flex: 1; font-size: 0.875rem; }
+    .cart-item-name { font-weight: 500; }
+    .cart-item-price { color: var(--ff-muted); font-size: 0.8rem; }
+    .qty-controls { display: flex; align-items: center; gap: 8px; }
+    .qty-btn {
+      background: var(--ff-card);
+      border:     1px solid var(--ff-border);
+      color:      var(--ff-text);
+      width:      26px; height: 26px;
+      border-radius: 6px;
+      cursor:     pointer;
+      font-size:  0.9rem;
+      display:    flex;
+      align-items:   center;
+      justify-content: center;
+    }
+    .qty-num { font-family: var(--ff-font); font-weight: 700; min-width: 16px; text-align: center; }
+    .cart-footer { padding: 24px; border-top: 1px solid var(--ff-border); }
+    .cart-total { display: flex; justify-content: space-between; margin-bottom: 16px; }
+    .cart-total span:last-child { font-family: var(--ff-font); font-weight: 700; font-size: 1.1rem; }
+    .cart-empty { text-align: center; padding: 60px 0; color: var(--ff-muted); }
+    .cart-empty .big { font-size: 3rem; margin-bottom: 12px; }
+
+    /* ── Order tracker ───────────────────────────────────────── */
+    .tracker {
+      background: var(--ff-card);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .tracker-steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-top: 24px;
+    }
+    .tracker-steps::before {
+      content: '';
+      position: absolute;
+      top: 16px; left: 0; right: 0;
+      height: 2px;
+      background: var(--ff-border);
+    }
+    .tracker-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--ff-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+    }
+    .step-dot.done { background: var(--ff-green); }
+    .step-dot.active { background: var(--ff-accent); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,92,40,0.4); } 50% { box-shadow: 0 0 0 8px rgba(255,92,40,0); } }
+    .step-label { font-size: 0.7rem; color: var(--ff-muted); text-align: center; max-width: 60px; }
+
+    /* ── Notifications ───────────────────────────────────────── */
+    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast {
+      background: var(--ff-card);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-sm);
+      padding: 12px 20px;
+      font-size: 0.875rem;
+      color: var(--ff-text);
+      animation: toastIn 0.3s ease;
+      pointer-events: all;
+    }
+    .toast.success { border-color: var(--ff-green); }
+    @keyframes toastIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--ff-border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--ff-muted);
+      font-size: 0.85rem;
+    }
+    footer strong { color: var(--ff-accent); }
+
+    /* ── CI/CD badge section ─────────────────────────────────── */
+    .cicd-banner {
+      background: linear-gradient(135deg, rgba(255,92,40,0.08), rgba(255,179,71,0.05));
+      border: 1px solid rgba(255,92,40,0.2);
+      border-radius: var(--ff-radius);
+      padding: 20px 28px;
+      margin: 40px 0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .cicd-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(46,204,113,0.12);
+      border: 1px solid var(--ff-green);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.75rem;
+      color: var(--ff-green);
+      font-weight: 600;
+    }
+    .cicd-text { font-size: 0.85rem; color: var(--ff-muted); }
+    .cicd-text strong { color: var(--ff-text); }
+
+    /* Utility */
+    .hidden { display: none !important; }
+    .flex { display: flex; }
+    .gap-2 { gap: 8px; }
+    .mt-4 { margin-top: 16px; }
+
+    /* Order modal overrides */
+    #order-success { text-align: center; padding: 20px 0; }
+    #order-success h2 { font-size: 2rem; margin: 16px 0 8px; }
+    #order-success p  { color: var(--ff-muted); }
+  </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────── -->
+<nav>
+  <div class="container nav-inner">
+    <a class="logo" href="#"><span>Feast</span>Flow</a>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" id="login-btn">Sign in</button>
+      <button class="btn btn-primary cart-btn" id="cart-open-btn">
+        🛒 Cart
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-tag">🔥 Fast &amp; Fresh Delivery</div>
+    <h1>
+      Food you love,<br />
+      <span class="line2">delivered fast.</span>
+    </h1>
+    <p>Discover hundreds of restaurants and get your favourite meals delivered to your door in minutes.</p>
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search restaurants or cuisines…" />
+      <button class="btn btn-primary" id="search-btn">Search</button>
+    </div>
+    <div class="stats-strip">
+      <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Restaurants</div></div>
+      <div class="stat"><div class="stat-num">30 min</div><div class="stat-label">Avg. Delivery</div></div>
+      <div class="stat"><div class="stat-num">4.8★</div><div class="stat-label">User Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- CI/CD Banner (DevOps context) -->
+  <div class="cicd-banner">
+    <span class="cicd-badge">✓ Jenkins CI/CD</span>
+    <span class="cicd-badge">✓ Docker</span>
+    <span class="cicd-badge">✓ Build Passing</span>
+    <div class="cicd-text">
+      <strong>Deployed via Jenkins pipeline</strong> — Angular → Lint → Test → Docker Build → Registry → Production
+    </div>
+  </div>
+
+  <!-- ── RESTAURANTS ────────────────────────────────────── -->
+  <section class="section">
+    <div class="section-header">
+      <h2>Popular Near You</h2>
+      <a href="#" id="view-all">View all</a>
+    </div>
+
+    <div class="categories" id="categories">
+      <button class="cat-pill active" data-cat="all">All</button>
+      <button class="cat-pill" data-cat="Indian">🍛 Indian</button>
+      <button class="cat-pill" data-cat="American">🍔 American</button>
+      <button class="cat-pill" data-cat="Japanese">🍣 Japanese</button>
+      <button class="cat-pill" data-cat="Italian">🍝 Italian</button>
+      <button class="cat-pill" data-cat="Mexican">🌮 Mexican</button>
+      <button class="cat-pill" data-cat="Chinese">🥟 Chinese</button>
+    </div>
+
+    <div class="restaurant-grid" id="restaurant-grid">
+      <!-- populated by JS -->
+    </div>
+  </section>
+</div>
+
+<!-- ── RESTAURANT MODAL (menu) ─────────────────────────── -->
+<div class="overlay" id="menu-overlay">
+  <div class="modal" id="menu-modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="modal-name">Restaurant</h2>
+        <div class="card-meta" id="modal-meta"></div>
+      </div>
+      <button class="modal-close" id="menu-close">✕</button>
+    </div>
+    <div id="menu-content"><!-- populated --></div>
+  </div>
+</div>
+
+<!-- ── CART PANEL ─────────────────────────────────────── -->
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <h3>🛒 Your Cart</h3>
+    <button class="modal-close" id="cart-close">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">
+      <div class="big">🍽️</div>
+      <p>Your cart is empty.<br />Add items to get started!</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cart-footer" style="display:none">
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <span id="cart-subtotal">$0.00</span>
+    </div>
+    <div class="cart-total">
+      <span>Delivery fee</span>
+      <span>$2.99</span>
+    </div>
+    <div class="cart-total">
+      <span><strong>Total</strong></span>
+      <span id="cart-total">$0.00</span>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" id="checkout-btn">
+      Place Order →
+    </button>
+  </div>
+</div>
+
+<!-- ── ORDER SUCCESS MODAL ─────────────────────────────── -->
+<div class="overlay" id="order-overlay">
+  <div class="modal" id="order-modal">
+    <div id="order-success">
+      <div style="font-size:4rem">🎉</div>
+      <h2>Order Placed!</h2>
+      <p id="order-id-text">Order #FF-1001</p>
+      <p style="margin-top:4px" id="order-eta-text">Estimated: 30 min</p>
+
+      <div class="tracker mt-4">
+        <div style="font-size:0.8rem;color:var(--ff-muted)">Live Tracking</div>
+        <div class="tracker-steps">
+          <div class="tracker-step">
+            <div class="step-dot done" id="step-placed">✓</div>
+            <div class="step-label">Placed</div>
+          </div>
+          <div class="tracker-step">
+            <div class="step-dot" id="step-confirmed">2</div>
+            <div class="step-label">Confirmed</div>
+          </div>
+          <div class="tracker-step">
+            <div class="step-dot" id="step-preparing">3</div>
+            <div class="step-label">Preparing</div>
+          </div>
+          <div class="tracker-step">
+            <div class="step-dot" id="step-delivery">4</div>
+            <div class="step-label">On the Way</div>
+          </div>
+          <div class="tracker-step">
+            <div class="step-dot" id="step-delivered">5</div>
+            <div class="step-label">Delivered</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-ghost mt-4" id="order-close">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST CONTAINER ────────────────────────────────── -->
+<div class="toast-container" id="toast-container"></div>
+
+<footer>
+  <div class="container">
+    <p><strong>FeastFlow</strong> — A DevOps demo project built with Jenkins CI/CD, Docker &amp; Node.js</p>
+    <p style="margin-top:8px">Pipeline: Checkout → Lint → Test → Docker Build → Publish → Deploy</p>
+  </div>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────────────────────
+const API = 'http://localhost:3001/api';
+
+const restaurants = [
+  { id:'1', name:'Spice Garden',    cuisine:'Indian',   rating:4.8, deliveryTime:'25-35 min', deliveryFee:2.99, image:'🍛', tags:['Spicy','Vegetarian Friendly'], isOpen:true  },
+  { id:'2', name:'Burger Republic', cuisine:'American', rating:4.5, deliveryTime:'20-30 min', deliveryFee:1.99, image:'🍔', tags:['Burgers','Fast Food'],           isOpen:true  },
+  { id:'3', name:'Sakura Sushi',    cuisine:'Japanese', rating:4.9, deliveryTime:'30-45 min', deliveryFee:3.99, image:'🍣', tags:['Sushi','Fresh','Premium'],        isOpen:true  },
+  { id:'4', name:'Pasta Palazzo',   cuisine:'Italian',  rating:4.6, deliveryTime:'25-40 min', deliveryFee:2.49, image:'🍝', tags:['Pasta','Pizza'],                  isOpen:false },
+  { id:'5', name:'Taco Fiesta',     cuisine:'Mexican',  rating:4.4, deliveryTime:'15-25 min', deliveryFee:0.99, image:'🌮', tags:['Tacos','Quick'],                  isOpen:true  },
+  { id:'6', name:'Dragon Palace',   cuisine:'Chinese',  rating:4.7, deliveryTime:'20-35 min', deliveryFee:1.49, image:'🥟', tags:['Dim Sum','Noodles','Authentic'],  isOpen:true  },
+];
+
+const menus = {
+  '1': { 'Starters': [{ id:'m2', name:'Paneer Tikka',   price:12.99, desc:'Grilled cottage cheese with spiced marinade', veg:true,  img:'🧀' }],
+         'Mains':    [{ id:'m1', name:'Butter Chicken',  price:14.99, desc:'Creamy tomato-based curry with chicken',      veg:false, img:'🍛' }],
+         'Breads':   [{ id:'m3', name:'Garlic Naan',     price:3.49,  desc:'Soft leavened bread with garlic butter',      veg:true,  img:'🫓' }],
+         'Drinks':   [{ id:'m4', name:'Mango Lassi',     price:4.99,  desc:'Chilled yoghurt drink with fresh mango',      veg:true,  img:'🥭' }] },
+  '2': { 'Burgers':  [{ id:'m5', name:'Classic Smash',   price:11.99, desc:'Double smash patty, American cheese',        veg:false, img:'🍔' },
+                       { id:'m6', name:'Crispy Chicken',  price:10.99, desc:'Fried chicken fillet, coleslaw',             veg:false, img:'🍗' }],
+         'Sides':    [{ id:'m7', name:'Loaded Fries',    price:6.99,  desc:'Thick-cut fries, cheese sauce, jalapeños',   veg:true,  img:'🍟' }],
+         'Drinks':   [{ id:'m8', name:'Milkshake',       price:5.99,  desc:'Thick shake — vanilla, choc, or strawberry', veg:true,  img:'🥤' }] },
+  '3': { 'Nigiri': [{ id:'m9',  name:'Salmon Nigiri x6', price:16.99, desc:'Fresh Atlantic salmon over sushi rice',       veg:false, img:'🍣' }],
+         'Rolls':  [{ id:'m10', name:'Dragon Roll',       price:18.99, desc:'Prawn tempura inside, avocado on top',        veg:false, img:'🌀' }],
+         'Sides':  [{ id:'m11', name:'Edamame',           price:4.99,  desc:'Steamed soybeans with sea salt',              veg:true,  img:'🫛' }] },
+  '5': { 'Tacos':    [{ id:'m13', name:'Carne Asada x3', price:9.99,  desc:'Grilled steak, pico de gallo, guacamole', veg:false, img:'🌮' }],
+         'Burritos': [{ id:'m14', name:'Veggie Burrito',  price:8.99,  desc:'Black beans, rice, cheese, sour cream',  veg:true,  img:'🌯' }],
+         'Sides':    [{ id:'m15', name:'Nachos Grande',   price:7.99,  desc:'Chips, cheese, jalapeños, salsa',         veg:true,  img:'🫔' }] },
+};
+menus['4'] = { 'Pasta': [{ id:'m16', name:'Spaghetti Bolognese', price:13.99, desc:'Classic beef ragu with spaghetti', veg:false, img:'🍝' }] };
+menus['6'] = { 'Dim Sum': [{ id:'m17', name:'Pork Dumplings x6', price:10.99, desc:'Steamed pork and chive dumplings', veg:false, img:'🥟' }] };
+
+// ─────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────
+let cart           = [];
+let activeRestaurant = null;
+let filterCuisine  = 'all';
+let searchTerm     = '';
+let trackerInterval = null;
+
+// ─────────────────────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────────────────────
+function $(id)   { return document.getElementById(id); }
+function fmt(n)  { return '$' + parseFloat(n).toFixed(2); }
+
+function toast(msg, type = '') {
+  const tc = $('toast-container');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  tc.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ─────────────────────────────────────────────────────────────
+// RESTAURANT LIST
+// ─────────────────────────────────────────────────────────────
+function renderRestaurants() {
+  let list = restaurants;
+  if (filterCuisine !== 'all') list = list.filter(r => r.cuisine === filterCuisine);
+  if (searchTerm)               list = list.filter(r =>
+    r.name.toLowerCase().includes(searchTerm) ||
+    r.cuisine.toLowerCase().includes(searchTerm));
+
+  const grid = $('restaurant-grid');
+  grid.innerHTML = list.map(r => `
+    <div class="restaurant-card" data-id="${r.id}">
+      <div class="card-hero">
+        ${r.image}
+        <span class="card-status ${r.isOpen ? 'open' : 'closed'}">${r.isOpen ? '● Open' : '● Closed'}</span>
+      </div>
+      <div class="card-body">
+        <h3>${r.name}</h3>
+        <div class="card-meta">
+          <span class="rating">★ ${r.rating}</span>
+          <span>🕐 ${r.deliveryTime}</span>
+          <span>🚚 ${fmt(r.deliveryFee)}</span>
+        </div>
+        <div class="card-tags">${r.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join('') || '<p style="color:var(--ff-muted)">No restaurants found.</p>';
+
+  grid.querySelectorAll('.restaurant-card').forEach(card => {
+    card.addEventListener('click', () => openMenu(card.dataset.id));
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// MENU MODAL
+// ─────────────────────────────────────────────────────────────
+function openMenu(id) {
+  const r   = restaurants.find(r => r.id === id);
+  const menu = menus[id] || {};
+  activeRestaurant = r;
+
+  $('modal-name').textContent = r.name;
+  $('modal-meta').innerHTML   = `<span class="rating">★ ${r.rating}</span><span>🕐 ${r.deliveryTime}</span><span>🚚 Delivery ${fmt(r.deliveryFee)}</span>`;
+
+  const content = Object.entries(menu).map(([cat, items]) => `
+    <div class="menu-category">
+      <h4>${cat}</h4>
+      ${items.map(item => `
+        <div class="menu-item">
+          <span class="menu-emoji">${item.img}</span>
+          <div class="menu-info">
+            <h4>${item.name} ${item.veg ? '<span style="color:var(--ff-green);font-size:0.7rem">● VEG</span>' : ''}</h4>
+            <p>${item.desc}</p>
+          </div>
+          <span class="menu-price">${fmt(item.price)}</span>
+          <button class="add-btn" data-item='${JSON.stringify({id:item.id, name:item.name, price:item.price, restaurantId:r.id, restaurantName:r.name})}'>+</button>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  $('menu-content').innerHTML = content || '<p style="color:var(--ff-muted)">Menu coming soon!</p>';
+  $('menu-content').querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      addToCart(JSON.parse(e.currentTarget.dataset.item));
+      e.currentTarget.textContent = '✓';
+      e.currentTarget.style.background = 'var(--ff-green)';
+      setTimeout(() => { e.currentTarget.textContent = '+'; e.currentTarget.style.background = ''; }, 1000);
+    });
+  });
+
+  $('menu-overlay').classList.add('open');
+}
+
+// ─────────────────────────────────────────────────────────────
+// CART
+// ─────────────────────────────────────────────────────────────
+function addToCart(item) {
+  // Prevent mixing restaurants
+  if (cart.length && cart[0].restaurantId !== item.restaurantId) {
+    if (!confirm('Your cart has items from another restaurant. Clear cart?')) return;
+    cart = [];
+  }
+  const existing = cart.find(c => c.id === item.id);
+  if (existing) { existing.quantity++; }
+  else          { cart.push({ ...item, quantity: 1 }); }
+  updateCartUI();
+  toast(`${item.name} added to cart! 🛒`, 'success');
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+  const count = cart.reduce((s, i) => s + i.quantity, 0);
+
+  $('cart-count').textContent = count;
+  $('cart-subtotal').textContent = fmt(total);
+  $('cart-total').textContent    = fmt(total + 2.99);
+
+  const isEmpty = cart.length === 0;
+  $('cart-footer').style.display = isEmpty ? 'none' : 'block';
+
+  $('cart-items').innerHTML = isEmpty
+    ? '<div class="cart-empty"><div class="big">🍽️</div><p>Your cart is empty.</p></div>'
+    : cart.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">${fmt(item.price)} each</div>
+          </div>
+          <div class="qty-controls">
+            <button class="qty-btn" data-action="dec" data-id="${item.id}">−</button>
+            <span class="qty-num">${item.quantity}</span>
+            <button class="qty-btn" data-action="inc" data-id="${item.id}">+</button>
+          </div>
+        </div>
+      `).join('');
+
+  $('cart-items').querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id  = btn.dataset.id;
+      const idx = cart.findIndex(c => c.id === id);
+      if (btn.dataset.action === 'inc') { cart[idx].quantity++; }
+      else { cart[idx].quantity--; if (cart[idx].quantity <= 0) cart.splice(idx, 1); }
+      updateCartUI();
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// CHECKOUT
+// ─────────────────────────────────────────────────────────────
+function placeOrder() {
+  if (!cart.length) return;
+
+  const orderId  = 'FF-' + (1000 + Math.floor(Math.random() * 9000));
+  const etaMins  = 25 + Math.floor(Math.random() * 20);
+
+  $('order-id-text').textContent  = `Order ${orderId}`;
+  $('order-eta-text').textContent = `Estimated: ${etaMins} min`;
+
+  // Reset tracker
+  ['step-confirmed','step-preparing','step-delivery','step-delivered'].forEach((id, i) => {
+    const el = $(id);
+    el.className = 'step-dot';
+    el.textContent = i + 2;
+  });
+  $('step-placed').className = 'step-dot done';
+  $('step-placed').textContent = '✓';
+
+  const steps = ['step-confirmed','step-preparing','step-delivery','step-delivered'];
+  let si = 0;
+  if (trackerInterval) clearInterval(trackerInterval);
+  trackerInterval = setInterval(() => {
+    if (si >= steps.length) { clearInterval(trackerInterval); return; }
+    const el = $(steps[si]);
+    el.className = 'step-dot done';
+    el.textContent = '✓';
+    if (si + 1 < steps.length) { const next = $(steps[si+1]); next.className = 'step-dot active'; }
+    si++;
+  }, 8000);
+
+  cart = [];
+  updateCartUI();
+  $('cart-panel').classList.remove('open');
+  $('order-overlay').classList.add('open');
+  toast(`Order ${orderId} placed successfully! 🎉`, 'success');
+}
+
+// ─────────────────────────────────────────────────────────────
+// EVENT LISTENERS
+// ─────────────────────────────────────────────────────────────
+$('menu-close').addEventListener('click',  () => $('menu-overlay').classList.remove('open'));
+$('menu-overlay').addEventListener('click', e => { if (e.target === $('menu-overlay')) $('menu-overlay').classList.remove('open'); });
+$('cart-open-btn').addEventListener('click', () => $('cart-panel').classList.add('open'));
+$('cart-close').addEventListener('click',    () => $('cart-panel').classList.remove('open'));
+$('checkout-btn').addEventListener('click',  placeOrder);
+$('order-close').addEventListener('click',   () => { $('order-overlay').classList.remove('open'); clearInterval(trackerInterval); });
+
+$('search-btn').addEventListener('click',   () => { searchTerm = $('search-input').value.toLowerCase().trim(); renderRestaurants(); });
+$('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') { searchTerm = e.target.value.toLowerCase().trim(); renderRestaurants(); } });
+
+$('categories').addEventListener('click', e => {
+  const pill = e.target.closest('.cat-pill');
+  if (!pill) return;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  filterCuisine = pill.dataset.cat;
+  renderRestaurants();
+});
+
+$('login-btn').addEventListener('click', () => toast('Demo mode — no login required! 😊'));
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+renderRestaurants();
+updateCartUI();
+</script>
+</body>
+</html>

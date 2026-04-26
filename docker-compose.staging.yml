@@ -1,0 +1,34 @@
+version: '3.9'
+# ── FeastFlow — Staging Compose ──────────────────────────────
+# Used by Jenkins in "Deploy to Staging" stage
+# Ports offset by +1 to avoid conflicts with production
+
+services:
+  feastflow-backend:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/feastflow-backend:${IMAGE_TAG:-latest}
+    container_name: feastflow-backend-staging
+    environment:
+      NODE_ENV: staging
+      PORT: 3002
+    ports:
+      - "3002:3001"
+    networks: [feastflow-staging]
+    healthcheck:
+      test: ["CMD","wget","-qO-","http://localhost:3001/api/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+
+  feastflow-frontend:
+    image: ${DOCKER_REGISTRY:-localhost:5000}/feastflow-frontend:${IMAGE_TAG:-latest}
+    container_name: feastflow-frontend-staging
+    ports:
+      - "8081:80"
+    depends_on:
+      feastflow-backend:
+        condition: service_healthy
+    networks: [feastflow-staging]
+
+networks:
+  feastflow-staging:
+    driver: bridge
