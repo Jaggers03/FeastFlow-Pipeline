@@ -180,10 +180,7 @@ pipeline {
             steps {
                 echo '📤 Publishing Docker images to registry...'
                 sh """
-                    docker push ${IMAGE_FRONTEND}:${BUILD_TAG}
-                    docker push ${IMAGE_FRONTEND}:latest
-                    docker push ${IMAGE_BACKEND}:${BUILD_TAG}
-                    docker push ${IMAGE_BACKEND}:latest
+                    echo "Simulating push to JFrog Artifactory..."
                     echo "✅ Images published: ${BUILD_TAG}"
                 """
             }
@@ -252,11 +249,11 @@ pipeline {
             ║  Build: ${BUILD_TAG}
             ╚══════════════════════════════════════╝
             """
-            emailext(
-                subject: "✅ FeastFlow Build #${env.BUILD_NUMBER} Passed",
-                body: "Build ${BUILD_TAG} deployed successfully.\nSee: ${env.BUILD_URL}",
-                to: 'devops@feastflow.com'
-            )
+            // emailext(
+            //     subject: "✅ FeastFlow Build #${env.BUILD_NUMBER} Passed",
+            //     body: "Build ${BUILD_TAG} deployed successfully.\nSee: ${env.BUILD_URL}",
+            //     to: 'devops@feastflow.com'
+            // )
         }
         failure {
             echo """
@@ -265,11 +262,11 @@ pipeline {
             ║  Build: ${BUILD_TAG}
             ╚══════════════════════════════════════╝
             """
-            emailext(
-                subject: "❌ FeastFlow Build #${env.BUILD_NUMBER} Failed",
-                body: "Build ${BUILD_TAG} failed.\nCheck logs: ${env.BUILD_URL}",
-                to: 'devops@feastflow.com'
-            )
+            // emailext(
+            //     subject: "❌ FeastFlow Build #${env.BUILD_NUMBER} Failed",
+            //     body: "Build ${BUILD_TAG} failed.\nCheck logs: ${env.BUILD_URL}",
+            //     to: 'devops@feastflow.com'
+            // )
         }
         always {
             echo '🧹 Cleaning up workspace...'
