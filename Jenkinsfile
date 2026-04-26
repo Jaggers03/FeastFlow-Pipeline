@@ -209,8 +209,8 @@ pipeline {
                 echo '💨 Running smoke tests on staging environment...'
                 sh '''
                     sleep 5
-                    curl -f http://localhost:3002/api/health || exit 1
-                    curl -f http://localhost:8081 || exit 1
+                    docker exec feastflow-backend-staging wget -qO- http://localhost:3001/api/health || exit 1
+                    docker exec feastflow-frontend-staging wget -qO- http://localhost:80 || exit 1
                     echo "✅ Smoke tests passed!"
                 '''
             }
